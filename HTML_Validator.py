@@ -56,7 +56,7 @@ def validate_html(html):
 
     htmltags = _extract_tags(html)
     if html == '':
-        return False
+        return True
     if htmltags == []:
         return False
     else:
