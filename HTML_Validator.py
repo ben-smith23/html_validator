@@ -1,6 +1,36 @@
 #!/bin/python3
 
 
+def _extract_tags(html):
+    '''
+    This is a helper function for `validate_html`.
+    By convention in Python, helper functions that are
+    not meant to be used directly by the user are prefixed with an underscore.
+    This function returns a list of all the html tags contained
+    in the input string,stripping out all text not contained within
+    angle brackets.
+    >>> _extract_tags('Python <strong>rocks</strong>!')
+    ['<strong>', '</strong>']
+    '''
+
+    htmltag = html.replace("<", "*<")
+    htmltag = htmltag.replace(">", ">*")
+    x = htmltag.split("*")
+    tags = []
+    cleantags = []
+    for i in x:
+        if i.startswith("<") and i.endswith(">"):
+            tags.append(i)
+    for tag in tags:
+        sep = " "
+        tag = tag.split(sep, 1)[0]
+        if tag[-1] != ">":
+            cleantags.append(tag + ">")
+        else:
+            cleantags.append(tag)
+    return cleantags
+
+
 def validate_html(html):
     '''
     This function performs a limited version of html validation by checking
@@ -24,34 +54,18 @@ def validate_html(html):
 
     stack = []
 
+    htmltags = _extract_tags(html)
 
-def _extract_tags(html):
-    '''
-    This is a helper function for `validate_html`.
-    By convention in Python, helper functions that are
-    not meant to be used directly by the user are prefixed with an underscore.
-
-    This function returns a list of all the html tags contained
-    in the input string,stripping out all text not contained within
-    angle brackets.
-
-    >>> _extract_tags('Python <strong>rocks</strong>!')
-    ['<strong>', '</strong>']
-    '''
-
-    htmltag = html.replace("<", "*<")
-    htmltag = htmltag.replace(">", ">*")
-    x = htmltag.split("*")
-    tags = []
-    cleantags = []
-    for i in x:
-        if i.startswith("<") and i.endswith(">"):
-            tags.append(i)
-    for tag in tags:
-        sep = " "
-        tag = tag.split(sep, 1)[0]
-        if tag[-1] != ">":
-            cleantags.append(tag + ">")
+    for symbol in htmltags:
+        if '/' not in symbol:
+            stack.append(symbol)
         else:
-            cleantags.append(tag)
-    return cleantags
+            if len(stack) == 0:
+                return False
+            if (stack[-1][0] == '<' and symbol[1] == '/'):
+                stack.pop()
+            else:
+                return False
+    return len(stack) == 0
+
+    validate_html(html)
