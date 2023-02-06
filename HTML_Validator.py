@@ -68,8 +68,9 @@ def validate_html(html):
             else:
                 if len(stack) == 0:
                     return False
-                if (stack[-1][0] == '<' and
-                        stack[-1][1:] == symbol[2:] and symbol[1] == '/'):
+                if (stack[-1][0] == '<') and \
+                        (stack[-1][1:] == symbol[2:]) and \
+                        (symbol[1] == '/'):
                     stack.pop()
                 else:
                     return False
