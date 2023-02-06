@@ -57,6 +57,8 @@ def validate_html(html):
     htmltags = _extract_tags(html)
 
     for symbol in htmltags:
+        if '>' not in symbol:
+            return False
         if '/' not in symbol:
             stack.append(symbol)
         else:
