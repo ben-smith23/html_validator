@@ -55,6 +55,8 @@ def validate_html(html):
     stack = []
 
     htmltags = _extract_tags(html)
+    if html == '':
+        return False
     if htmltags == []:
         return False
     else:
