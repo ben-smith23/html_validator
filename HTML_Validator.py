@@ -55,19 +55,19 @@ def validate_html(html):
     stack = []
 
     htmltags = _extract_tags(html)
-
-    for symbol in htmltags:
-        if '>' not in symbol:
-            return False
-        if '/' not in symbol:
-            stack.append(symbol)
-        else:
-            if len(stack) == 0:
+    if htmltags == []:
+        return False
+    else:
+        for symbol in htmltags:
+            if '>' not in symbol:
                 return False
-            if (stack[-1][0] == '<' and symbol[1] == '/'):
-                stack.pop()
+            if '/' not in symbol:
+                stack.append(symbol)
             else:
-                return False
-    return len(stack) == 0
-
-    validate_html(html)
+                if len(stack) == 0:
+                    return False
+                if (stack[-1][0] == '<' and symbol[1] == '/'):
+                    stack.pop()
+                else:
+                    return False
+        return len(stack) == 0
